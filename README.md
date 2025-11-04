@@ -2,6 +2,7 @@
 
 A facial recognition-based attendance system with student authentication and photo capture.
 
+```https://p.ip.fi/wZoo``` ->refer for sample .env
 ## Setup Instructions
 
 ### Backend Setup
