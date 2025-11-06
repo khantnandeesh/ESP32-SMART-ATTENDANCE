@@ -56,4 +56,42 @@ router.post('/generate-embeddings', auth, async (req, res) => {
     }
 });
 
+// Get all students (for admin)
+router.get('/all', async (req, res) => {
+    try {
+        const students = await Student.find()
+            .select('name email registrationNumber hasPhotos photos createdAt')
+            .sort({ createdAt: -1 });
+
+        res.json({ students });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Get student attendance history
+router.get('/attendance/:registrationNumber', async (req, res) => {
+    try {
+        const { registrationNumber } = req.params;
+
+        const student = await Student.findOne({ registrationNumber });
+        if (!student) {
+            return res.status(404).json({ error: 'Student not found' });
+        }
+
+        res.json({
+            student: {
+                name: student.name,
+                email: student.email,
+                registrationNumber: student.registrationNumber,
+                hasPhotos: student.hasPhotos,
+                photos: student.photos
+            },
+            attendanceRecords: student.attendanceRecords || []
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 module.exports = router;

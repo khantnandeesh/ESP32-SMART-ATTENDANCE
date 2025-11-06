@@ -5,10 +5,37 @@ const attendanceSessionSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    subjectId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Subject',
+        required: true
+    },
+    subjectName: String,
+    subjectCode: String,
     adminId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Admin',
         required: true
+    },
+    startTime: {
+        type: Date,
+        required: true
+    },
+    endTime: {
+        type: Date,
+        required: true
+    },
+    isActive: {
+        type: Boolean,
+        default: true
+    },
+    isClosed: {
+        type: Boolean,
+        default: false
+    },
+    captureCount: {
+        type: Number,
+        default: 0
     },
     photos: [{
         url: String,
@@ -35,8 +62,8 @@ const attendanceSessionSchema = new mongoose.Schema({
     }],
     status: {
         type: String,
-        enum: ['capturing', 'processing', 'completed', 'failed'],
-        default: 'capturing'
+        enum: ['active', 'capturing', 'processing', 'completed', 'closed'],
+        default: 'active'
     },
     totalPhotos: {
         type: Number,

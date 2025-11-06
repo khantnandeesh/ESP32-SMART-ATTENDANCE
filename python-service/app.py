@@ -145,7 +145,19 @@ def generate_embeddings():
 
 @app.route('/recognize-multiple-faces', methods=['POST'])
 def recognize_multiple_faces():
-    """Recognize multiple faces in a group photo"""
+    """
+    Recognize multiple faces in a group photo
+    
+    Anti-Spoofing Measures:
+    - Uses stricter tolerance (0.5) to reduce false positives
+    - Requires minimum confidence of 60% (enforced in backend)
+    - Multiple reference photos per student for better accuracy
+    
+    Note: For production, consider adding:
+    - Liveness detection (blink detection, head movement)
+    - 3D depth sensing
+    - Texture analysis to detect printed photos
+    """
     try:
         data = request.json
         image_url = data.get('imageUrl')
@@ -175,14 +187,17 @@ def recognize_multiple_faces():
                     continue
                 
                 stored_encodings = [np.array(emb['embedding']) for emb in student['faceEmbeddings']]
-                matches = face_recognition.compare_faces(stored_encodings, test_encoding, tolerance=0.6)
+                
+                # Stricter tolerance for better anti-spoofing
+                matches = face_recognition.compare_faces(stored_encodings, test_encoding, tolerance=0.5)
                 
                 if any(matches):
                     face_distances = face_recognition.face_distance(stored_encodings, test_encoding)
                     best_match_index = np.argmin(face_distances)
                     confidence = 1 - face_distances[best_match_index]
                     
-                    if confidence > best_confidence:
+                    # Only consider if confidence is high enough
+                    if confidence > best_confidence and confidence >= 0.55:
                         best_confidence = confidence
                         best_match = {
                             "registrationNumber": student['registrationNumber'],
@@ -196,7 +211,7 @@ def recognize_multiple_faces():
             else:
                 recognized_faces.append({
                     "verified": False,
-                    "message": f"Face {face_idx + 1} not recognized"
+                    "message": f"Face {face_idx + 1} not recognized or confidence too low"
                 })
         
         return jsonify({

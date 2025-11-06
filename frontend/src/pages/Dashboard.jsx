@@ -14,7 +14,7 @@ function Dashboard({ token, setToken }) {
     const fetchStudentData = async () => {
         try {
             const response = await api.get('/api/student/me');
-            console.log(response.data,"student data");
+            console.log(response.data, "student data");
             setStudent(response.data);
 
             if (!response.data.hasPhotos) {
@@ -80,6 +80,21 @@ function Dashboard({ token, setToken }) {
                         <div className="info-label">Status</div>
                         <div className="info-value">{student?.hasPhotos ? '✓ Active' : 'Pending Photos'}</div>
                     </div>
+                </div>
+
+                <div style={{ marginTop: '20px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                    <button
+                        onClick={() => navigate('/enrollments')}
+                        style={{ background: '#007bff', flex: '1', minWidth: '200px' }}
+                    >
+                        📚 My Course Enrollments
+                    </button>
+                    <button
+                        onClick={() => navigate('/view-photos')}
+                        style={{ background: '#17a2b8', flex: '1', minWidth: '200px' }}
+                    >
+                        📸 View My Photos
+                    </button>
                 </div>
 
                 <div style={{ marginTop: '20px' }}>
