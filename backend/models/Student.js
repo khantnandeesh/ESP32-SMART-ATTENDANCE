@@ -51,12 +51,35 @@ const studentSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+<<<<<<< HEAD
+=======
+    enrolledSubjects: [{
+        subjectId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Subject'
+        },
+        subjectName: String,
+        subjectCode: String,
+        enrolledAt: {
+            type: Date,
+            default: Date.now
+        }
+    }],
+>>>>>>> harsh_sharma
     attendanceRecords: [{
         sessionId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'AttendanceSession'
         },
         sessionName: String,
+<<<<<<< HEAD
+=======
+        subjectId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Subject'
+        },
+        subjectName: String,
+>>>>>>> harsh_sharma
         photoUrl: String,
         confidence: Number,
         markedAt: {
