@@ -145,9 +145,6 @@ def generate_embeddings():
 
 @app.route('/recognize-multiple-faces', methods=['POST'])
 def recognize_multiple_faces():
-<<<<<<< HEAD
-    """Recognize multiple faces in a group photo"""
-=======
     """
     Recognize multiple faces in a group photo
     
@@ -161,7 +158,6 @@ def recognize_multiple_faces():
     - 3D depth sensing
     - Texture analysis to detect printed photos
     """
->>>>>>> harsh_sharma
     try:
         data = request.json
         image_url = data.get('imageUrl')
@@ -191,25 +187,17 @@ def recognize_multiple_faces():
                     continue
                 
                 stored_encodings = [np.array(emb['embedding']) for emb in student['faceEmbeddings']]
-<<<<<<< HEAD
-                matches = face_recognition.compare_faces(stored_encodings, test_encoding, tolerance=0.6)
-=======
                 
                 # Stricter tolerance for better anti-spoofing
                 matches = face_recognition.compare_faces(stored_encodings, test_encoding, tolerance=0.5)
->>>>>>> harsh_sharma
                 
                 if any(matches):
                     face_distances = face_recognition.face_distance(stored_encodings, test_encoding)
                     best_match_index = np.argmin(face_distances)
                     confidence = 1 - face_distances[best_match_index]
                     
-<<<<<<< HEAD
-                    if confidence > best_confidence:
-=======
                     # Only consider if confidence is high enough
                     if confidence > best_confidence and confidence >= 0.55:
->>>>>>> harsh_sharma
                         best_confidence = confidence
                         best_match = {
                             "registrationNumber": student['registrationNumber'],
@@ -223,11 +211,7 @@ def recognize_multiple_faces():
             else:
                 recognized_faces.append({
                     "verified": False,
-<<<<<<< HEAD
-                    "message": f"Face {face_idx + 1} not recognized"
-=======
                     "message": f"Face {face_idx + 1} not recognized or confidence too low"
->>>>>>> harsh_sharma
                 })
         
         return jsonify({

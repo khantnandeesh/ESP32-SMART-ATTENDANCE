@@ -1,16 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../config/api';
-<<<<<<< HEAD
-
-function AdminDashboard({ adminToken, setAdminToken }) {
-    const [sessions, setSessions] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [capturing, setCapturing] = useState(false);
-    const [processing, setProcessing] = useState(false);
-    const [currentSession, setCurrentSession] = useState(null);
-    const [sessionName, setSessionName] = useState('');
-=======
 import AdminLayout from '../../components/AdminLayout';
 
 function AdminDashboard({ adminToken, setAdminToken }) {
@@ -21,16 +11,12 @@ function AdminDashboard({ adminToken, setAdminToken }) {
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
     const [error, setError] = useState('');
->>>>>>> harsh_sharma
     const navigate = useNavigate();
 
     useEffect(() => {
         fetchSessions();
-<<<<<<< HEAD
-=======
         fetchActiveSessions();
         fetchSubjects();
->>>>>>> harsh_sharma
     }, []);
 
     const fetchSessions = async () => {
@@ -42,44 +28,6 @@ function AdminDashboard({ adminToken, setAdminToken }) {
         }
     };
 
-<<<<<<< HEAD
-    const handleCreateAndCapture = async () => {
-        if (!sessionName.trim()) {
-            alert('Please enter a session name');
-            return;
-        }
-
-        setCapturing(true);
-
-        try {
-            // Create session
-            const createResponse = await api.post('/api/attendance/create-session', {
-                sessionName: sessionName.trim()
-            });
-
-            const sessionId = createResponse.data.sessionId;
-            setCurrentSession(sessionId);
-
-            // Capture 2 photos
-            const captureResponse = await api.post(`/api/attendance/capture-photos/${sessionId}`);
-
-            alert(`Captured ${captureResponse.data.totalPhotos} photos successfully!`);
-
-            // Process attendance
-            setProcessing(true);
-            const processResponse = await api.post(`/api/attendance/process-session/${sessionId}`);
-
-            alert(`Attendance processed! ${processResponse.data.studentsRecognized} students recognized.`);
-
-            setSessionName('');
-            setCurrentSession(null);
-            fetchSessions();
-        } catch (error) {
-            alert(error.response?.data?.error || 'Failed to capture attendance');
-        } finally {
-            setCapturing(false);
-            setProcessing(false);
-=======
     const fetchActiveSessions = async () => {
         try {
             const response = await api.get('/api/attendance/active-sessions');
@@ -120,7 +68,6 @@ function AdminDashboard({ adminToken, setAdminToken }) {
             fetchActiveSessions();
         } catch (err) {
             setError(err.response?.data?.error || 'Failed to create session');
->>>>>>> harsh_sharma
         }
     };
 
@@ -130,12 +77,6 @@ function AdminDashboard({ adminToken, setAdminToken }) {
     };
 
     return (
-<<<<<<< HEAD
-        <div className="dashboard-container">
-            <div className="dashboard-header">
-                <h1>Admin Dashboard</h1>
-                <p className="subtitle">Smart Attendance System</p>
-=======
         <AdminLayout onLogout={handleLogout}>
             <div>
                 <h1 style={{ margin: '0 0 10px 0', fontSize: '32px', color: '#1e3c72' }}>Dashboard</h1>
@@ -148,7 +89,6 @@ function AdminDashboard({ adminToken, setAdminToken }) {
                         </p>
                     </div>
                 )}
->>>>>>> harsh_sharma
 
                 <div style={{
                     background: '#f8f9fa',
@@ -156,45 +96,6 @@ function AdminDashboard({ adminToken, setAdminToken }) {
                     borderRadius: '10px',
                     marginTop: '20px'
                 }}>
-<<<<<<< HEAD
-                    <h3 style={{ marginBottom: '15px' }}>Capture Attendance</h3>
-
-                    <div className="form-group">
-                        <label>Session Name</label>
-                        <input
-                            type="text"
-                            value={sessionName}
-                            onChange={(e) => setSessionName(e.target.value)}
-                            placeholder="e.g., Morning Class - CS101"
-                            disabled={capturing || processing}
-                        />
-                    </div>
-
-                    <button
-                        onClick={handleCreateAndCapture}
-                        disabled={capturing || processing || !sessionName.trim()}
-                        style={{ background: '#28a745', marginTop: '10px' }}
-                    >
-                        {capturing ? 'Capturing 2 Photos...' : processing ? 'Processing Faces...' : 'Capture Attendance'}
-                    </button>
-
-                    {(capturing || processing) && (
-                        <div style={{
-                            marginTop: '15px',
-                            padding: '10px',
-                            background: '#fff3cd',
-                            borderRadius: '5px',
-                            color: '#856404'
-                        }}>
-                            {capturing && '📸 Capturing photos from ESP32-CAM...'}
-                            {processing && '🔍 Processing faces and recognizing students...'}
-                        </div>
-                    )}
-                </div>
-
-                <div style={{ marginTop: '30px' }}>
-                    <h3>Recent Sessions</h3>
-=======
                     <h3 style={{ marginBottom: '15px' }}>Create Attendance Session</h3>
 
                     {error && <div className="error">{error}</div>}
@@ -296,7 +197,6 @@ function AdminDashboard({ adminToken, setAdminToken }) {
 
                 <div style={{ marginTop: '30px' }}>
                     <h3>All Sessions</h3>
->>>>>>> harsh_sharma
                     {sessions.length === 0 ? (
                         <p style={{ color: '#666', marginTop: '10px' }}>No sessions yet</p>
                     ) : (
@@ -325,13 +225,8 @@ function AdminDashboard({ adminToken, setAdminToken }) {
                                             <div style={{
                                                 padding: '5px 10px',
                                                 borderRadius: '5px',
-<<<<<<< HEAD
-                                                background: session.status === 'completed' ? '#d4edda' : '#fff3cd',
-                                                color: session.status === 'completed' ? '#155724' : '#856404',
-=======
                                                 background: session.status === 'closed' ? '#d4edda' : session.status === 'active' ? '#fff3cd' : '#f8d7da',
                                                 color: session.status === 'closed' ? '#155724' : session.status === 'active' ? '#856404' : '#721c24',
->>>>>>> harsh_sharma
                                                 fontSize: '12px',
                                                 marginBottom: '5px'
                                             }}>
@@ -348,16 +243,8 @@ function AdminDashboard({ adminToken, setAdminToken }) {
                     )}
                 </div>
 
-<<<<<<< HEAD
-                <button onClick={handleLogout} className="logout-btn" style={{ marginTop: '20px' }}>
-                    Logout
-                </button>
-            </div>
-        </div>
-=======
             </div>
         </AdminLayout>
->>>>>>> harsh_sharma
     );
 }
 

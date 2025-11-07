@@ -3,13 +3,9 @@ const axios = require('axios');
 const cloudinary = require('../config/cloudinary');
 const AttendanceSession = require('../models/AttendanceSession');
 const Student = require('../models/Student');
-<<<<<<< HEAD
-const adminAuth = require('../middleware/adminAuth');
-=======
 const Subject = require('../models/Subject');
 const adminAuth = require('../middleware/adminAuth');
 const { sendAttendanceEmail, sendAbsentEmail } = require('../services/emailService');
->>>>>>> harsh_sharma
 
 const router = express.Router();
 
@@ -19,18 +15,6 @@ const PYTHON_SERVICE_URL = process.env.PYTHON_SERVICE_URL || 'http://localhost:5
 // Create new attendance session
 router.post('/create-session', adminAuth, async (req, res) => {
     try {
-<<<<<<< HEAD
-        const { sessionName } = req.body;
-
-        if (!sessionName) {
-            return res.status(400).json({ error: 'Session name is required' });
-        }
-
-        const session = new AttendanceSession({
-            sessionName,
-            adminId: req.adminId,
-            status: 'capturing'
-=======
         const { subjectId, startTime, endTime } = req.body;
 
         if (!subjectId || !startTime || !endTime) {
@@ -62,17 +46,12 @@ router.post('/create-session', adminAuth, async (req, res) => {
             startTime: start,
             endTime: end,
             status: 'active'
->>>>>>> harsh_sharma
         });
 
         await session.save();
 
         res.json({
             message: 'Session created',
-<<<<<<< HEAD
-            sessionId: session._id,
-            sessionName: session.sessionName
-=======
             session: {
                 id: session._id,
                 sessionName: session.sessionName,
@@ -81,15 +60,12 @@ router.post('/create-session', adminAuth, async (req, res) => {
                 endTime: session.endTime,
                 status: session.status
             }
->>>>>>> harsh_sharma
         });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-<<<<<<< HEAD
-=======
 // Get active sessions
 router.get('/active-sessions', adminAuth, async (req, res) => {
     try {
@@ -219,7 +195,6 @@ router.get('/check-esp32', adminAuth, async (req, res) => {
     }
 });
 
->>>>>>> harsh_sharma
 // Capture photos from ESP32-CAM
 router.post('/capture-photos/:sessionId', adminAuth, async (req, res) => {
     try {
@@ -230,8 +205,6 @@ router.post('/capture-photos/:sessionId', adminAuth, async (req, res) => {
             return res.status(404).json({ error: 'Session not found' });
         }
 
-<<<<<<< HEAD
-=======
         // Check if session is active
         const now = new Date();
         if (now < session.startTime) {
@@ -242,7 +215,6 @@ router.post('/capture-photos/:sessionId', adminAuth, async (req, res) => {
             return res.status(400).json({ error: 'Session has ended' });
         }
 
->>>>>>> harsh_sharma
         const capturedPhotos = [];
         const errors = [];
 
@@ -266,11 +238,7 @@ router.post('/capture-photos/:sessionId', adminAuth, async (req, res) => {
                     const uploadStream = cloudinary.uploader.upload_stream(
                         {
                             folder: `attendance-sessions/${sessionId}`,
-<<<<<<< HEAD
-                            public_id: `photo_${i}_${Date.now()}`,
-=======
                             public_id: `photo_${session.captureCount}_${i}_${Date.now()}`,
->>>>>>> harsh_sharma
                             resource_type: 'image'
                         },
                         (error, result) => {
@@ -297,28 +265,18 @@ router.post('/capture-photos/:sessionId', adminAuth, async (req, res) => {
             return res.status(500).json({ error: 'Failed to capture any photos', errors });
         }
 
-<<<<<<< HEAD
-        // Update session with photos
-        session.photos = capturedPhotos;
-        session.totalPhotos = capturedPhotos.length;
-=======
         // Append photos to session
         session.photos.push(...capturedPhotos);
         session.totalPhotos = session.photos.length;
         session.captureCount += 1;
->>>>>>> harsh_sharma
         session.status = 'processing';
         await session.save();
 
         res.json({
             message: `Captured ${capturedPhotos.length} photos`,
             sessionId: session._id,
-<<<<<<< HEAD
-            totalPhotos: capturedPhotos.length,
-=======
             totalPhotos: session.photos.length,
             captureCount: session.captureCount,
->>>>>>> harsh_sharma
             errors: errors.length > 0 ? errors : undefined
         });
     } catch (error) {
@@ -326,8 +284,6 @@ router.post('/capture-photos/:sessionId', adminAuth, async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
-=======
 // Upload photos manually (fallback when ESP32 not available)
 router.post('/upload-photos/:sessionId', adminAuth, async (req, res) => {
     try {
@@ -400,7 +356,6 @@ router.post('/upload-photos/:sessionId', adminAuth, async (req, res) => {
     }
 });
 
->>>>>>> harsh_sharma
 // Process attendance (recognize faces)
 router.post('/process-session/:sessionId', adminAuth, async (req, res) => {
     try {
@@ -432,12 +387,8 @@ router.post('/process-session/:sessionId', adminAuth, async (req, res) => {
 
                 if (response.data.faces && response.data.faces.length > 0) {
                     response.data.faces.forEach(face => {
-<<<<<<< HEAD
-                        if (face.verified && face.registrationNumber) {
-=======
                         // Only accept faces with confidence >= 60%
                         if (face.verified && face.registrationNumber && face.confidence >= 0.60) {
->>>>>>> harsh_sharma
                             const existing = recognizedStudentsMap.get(face.registrationNumber);
 
                             // Keep the best match (highest confidence)
@@ -458,36 +409,6 @@ router.post('/process-session/:sessionId', adminAuth, async (req, res) => {
             }
         }
 
-<<<<<<< HEAD
-        // Convert map to array and get student IDs
-        const recognizedStudents = [];
-        for (const [regNum, data] of recognizedStudentsMap) {
-            const student = await Student.findOne({ registrationNumber: regNum });
-            if (student) {
-                recognizedStudents.push({
-                    studentId: student._id,
-                    ...data
-                });
-
-                // Update student's attendance record
-                if (!student.attendanceRecords) {
-                    student.attendanceRecords = [];
-                }
-                student.attendanceRecords.push({
-                    sessionId: session._id,
-                    sessionName: session.sessionName,
-                    photoUrl: data.bestPhotoUrl,
-                    confidence: data.confidence,
-                    markedAt: new Date()
-                });
-                await student.save();
-            }
-        }
-
-        session.recognizedStudents = recognizedStudents;
-        session.studentsRecognized = recognizedStudents.length;
-        session.status = 'completed';
-=======
         // Get enrolled students for this subject
         const subject = await Subject.findById(session.subjectId);
         const enrolledStudentIds = subject?.enrolledStudents?.map(e => e.studentId.toString()) || [];
@@ -602,24 +523,18 @@ router.post('/process-session/:sessionId', adminAuth, async (req, res) => {
             session.status = 'active';
         }
 
->>>>>>> harsh_sharma
         await session.save();
 
         res.json({
             message: 'Attendance processed successfully',
             sessionId: session._id,
             totalPhotos: session.totalPhotos,
-<<<<<<< HEAD
-            studentsRecognized: recognizedStudents.length,
-            students: recognizedStudents
-=======
             studentsRecognized: session.recognizedStudents.length,
             newlyMarked: recognizedStudents.length,
             skipped: skippedStudents.length,
             students: recognizedStudents,
             skippedStudents: skippedStudents,
             status: session.status
->>>>>>> harsh_sharma
         });
     } catch (error) {
         const session = await AttendanceSession.findById(req.params.sessionId);
@@ -654,23 +569,18 @@ router.get('/session/:sessionId', adminAuth, async (req, res) => {
             return res.status(404).json({ error: 'Session not found' });
         }
 
-<<<<<<< HEAD
-=======
         // Check if session should be auto-closed (but don't send emails yet)
         const now = new Date();
         if (now > session.endTime && !session.isClosed) {
             session.status = 'expired'; // Mark as expired but not closed
         }
 
->>>>>>> harsh_sharma
         res.json({ session });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-<<<<<<< HEAD
-=======
 // Get attendance sheet for a subject
 router.get('/attendance-sheet/:subjectId', adminAuth, async (req, res) => {
     try {
@@ -859,5 +769,4 @@ router.post('/manual-attendance/:sessionId', adminAuth, async (req, res) => {
     }
 });
 
->>>>>>> harsh_sharma
 module.exports = router;

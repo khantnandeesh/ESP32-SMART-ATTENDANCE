@@ -56,8 +56,6 @@ router.post('/generate-embeddings', auth, async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
-=======
 // Get all students (for admin)
 router.get('/all', async (req, res) => {
     try {
@@ -96,5 +94,4 @@ router.get('/attendance/:registrationNumber', async (req, res) => {
     }
 });
 
->>>>>>> harsh_sharma
 module.exports = router;

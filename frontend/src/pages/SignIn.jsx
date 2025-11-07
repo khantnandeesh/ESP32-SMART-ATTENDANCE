@@ -3,27 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import api from '../config/api';
 
 function SignIn({ setToken }) {
-<<<<<<< HEAD
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        registrationNumber: '',
-        password: '',
-        confirmPassword: ''
-    });
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
-
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-
-=======
     const [step, setStep] = useState(1); // 1: Enter details, 2: Verify OTP
     const [formData, setFormData] = useState({
         name: '',
@@ -77,7 +56,6 @@ function SignIn({ setToken }) {
         }
 
         // Validate passwords
->>>>>>> harsh_sharma
         if (formData.password !== formData.confirmPassword) {
             setError('Passwords do not match');
             return;
@@ -92,13 +70,6 @@ function SignIn({ setToken }) {
 
         try {
             const { confirmPassword, ...dataToSend } = formData;
-<<<<<<< HEAD
-            const response = await api.post('/api/auth/signin', dataToSend);
-            setToken(response.data.token);
-            navigate('/dashboard');
-        } catch (err) {
-            setError(err.response?.data?.error || err.response?.data?.errors?.[0]?.msg || 'Sign in failed');
-=======
             const response = await api.post('/api/auth/request-otp', dataToSend);
             
             setRegistrationNumber(response.data.registrationNumber);
@@ -107,14 +78,11 @@ function SignIn({ setToken }) {
             setTimer(600); // 10 minutes
         } catch (err) {
             setError(err.response?.data?.error || 'Failed to send OTP');
->>>>>>> harsh_sharma
         } finally {
             setLoading(false);
         }
     };
 
-<<<<<<< HEAD
-=======
     const handleVerifyOTP = async (e) => {
         e.preventDefault();
         setError('');
@@ -171,86 +139,10 @@ function SignIn({ setToken }) {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
->>>>>>> harsh_sharma
     return (
         <div className="container">
             <div className="card">
                 <h1>Sign In</h1>
-<<<<<<< HEAD
-                <p className="subtitle">Create your account for Smart Attendance</p>
-
-                {error && <div className="error">{error}</div>}
-
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label>Full Name</label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            placeholder="Enter your full name"
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label>College Email</label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="your.email@college.edu"
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Registration Number (8 digits)</label>
-                        <input
-                            type="text"
-                            name="registrationNumber"
-                            value={formData.registrationNumber}
-                            onChange={handleChange}
-                            placeholder="12345678"
-                            pattern="\d{8}"
-                            maxLength="8"
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Password</label>
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            placeholder="Enter password (min 6 characters)"
-                            minLength="6"
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Confirm Password</label>
-                        <input
-                            type="password"
-                            name="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
-                            placeholder="Confirm your password"
-                            minLength="6"
-                            required
-                        />
-                    </div>
-
-                    <button type="submit" disabled={loading}>
-                        {loading ? 'Signing In...' : 'Sign In'}
-                    </button>
-                </form>
-=======
                 <p className="subtitle">
                     {step === 1 
                         ? 'Create your account for Smart Attendance' 
@@ -406,14 +298,11 @@ function SignIn({ setToken }) {
                         </div>
                     </form>
                 )}
->>>>>>> harsh_sharma
 
                 <div className="link">
                     Already have an account? <Link to="/login">Login here</Link>
                 </div>
             </div>
-<<<<<<< HEAD
-=======
 
             <style jsx>{`
                 .success {
@@ -425,13 +314,8 @@ function SignIn({ setToken }) {
                     border: 1px solid #c3e6cb;
                 }
             `}</style>
->>>>>>> harsh_sharma
         </div>
     );
 }
 
-<<<<<<< HEAD
 export default SignIn;
-=======
-export default SignIn;
->>>>>>> harsh_sharma

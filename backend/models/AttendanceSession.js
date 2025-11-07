@@ -5,8 +5,6 @@ const attendanceSessionSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-<<<<<<< HEAD
-=======
     subjectId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Subject',
@@ -14,14 +12,11 @@ const attendanceSessionSchema = new mongoose.Schema({
     },
     subjectName: String,
     subjectCode: String,
->>>>>>> harsh_sharma
     adminId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Admin',
         required: true
     },
-<<<<<<< HEAD
-=======
     startTime: {
         type: Date,
         required: true
@@ -42,7 +37,6 @@ const attendanceSessionSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
->>>>>>> harsh_sharma
     photos: [{
         url: String,
         publicId: String,
@@ -68,13 +62,8 @@ const attendanceSessionSchema = new mongoose.Schema({
     }],
     status: {
         type: String,
-<<<<<<< HEAD
-        enum: ['capturing', 'processing', 'completed', 'failed'],
-        default: 'capturing'
-=======
         enum: ['active', 'capturing', 'processing', 'completed', 'closed'],
         default: 'active'
->>>>>>> harsh_sharma
     },
     totalPhotos: {
         type: Number,

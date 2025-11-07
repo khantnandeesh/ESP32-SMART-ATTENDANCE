@@ -14,10 +14,7 @@ function Dashboard({ token, setToken }) {
     const fetchStudentData = async () => {
         try {
             const response = await api.get('/api/student/me');
-<<<<<<< HEAD
-=======
             console.log(response.data, "student data");
->>>>>>> harsh_sharma
             setStudent(response.data);
 
             if (!response.data.hasPhotos) {
@@ -85,8 +82,6 @@ function Dashboard({ token, setToken }) {
                     </div>
                 </div>
 
-<<<<<<< HEAD
-=======
                 <div style={{ marginTop: '20px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                     <button
                         onClick={() => navigate('/enrollments')}
@@ -102,7 +97,6 @@ function Dashboard({ token, setToken }) {
                     </button>
                 </div>
 
->>>>>>> harsh_sharma
                 <div style={{ marginTop: '20px' }}>
                     {student?.hasPhotos && !student?.embeddingsGenerated && (
                         <div style={{

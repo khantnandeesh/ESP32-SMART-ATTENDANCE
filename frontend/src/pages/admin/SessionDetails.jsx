@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import api from '../../config/api';
-
-function SessionDetails() {
-    const { sessionId } = useParams();
-    const [session, setSession] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        fetchSessionDetails();
-=======
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../config/api';
@@ -43,7 +29,6 @@ function SessionDetails({ setAdminToken }) {
         fetchSessionDetails();
         const interval = setInterval(fetchSessionDetails, 5000); // Refresh every 5 seconds
         return () => clearInterval(interval);
->>>>>>> harsh_sharma
     }, [sessionId]);
 
     const fetchSessionDetails = async () => {
@@ -57,15 +42,6 @@ function SessionDetails({ setAdminToken }) {
         }
     };
 
-<<<<<<< HEAD
-    if (loading) {
-        return (
-            <div className="container">
-                <div className="card">
-                    <h1>Loading...</h1>
-                </div>
-            </div>
-=======
     const checkESP32 = async () => {
         try {
             const response = await api.get('/api/attendance/check-esp32');
@@ -326,29 +302,11 @@ function SessionDetails({ setAdminToken }) {
                     <h2>Loading session...</h2>
                 </div>
             </AdminLayout>
->>>>>>> harsh_sharma
         );
     }
 
     if (!session) {
         return (
-<<<<<<< HEAD
-            <div className="container">
-                <div className="card">
-                    <h1>Session not found</h1>
-                    <button onClick={() => navigate('/admin/dashboard')}>Back to Dashboard</button>
-                </div>
-            </div>
-        );
-    }
-
-    return (
-        <div className="dashboard-container">
-            <div className="dashboard-header">
-                <button
-                    onClick={() => navigate('/admin/dashboard')}
-                    style={{ marginBottom: '20px', background: '#6c757d' }}
-=======
             <AdminLayout onLogout={handleLogout}>
                 <div style={{ textAlign: 'center', padding: '50px' }}>
                     <h2>Session not found</h2>
@@ -378,17 +336,12 @@ function SessionDetails({ setAdminToken }) {
                         cursor: 'pointer',
                         fontSize: '14px'
                     }}
->>>>>>> harsh_sharma
                 >
                     ← Back to Dashboard
                 </button>
 
                 <h1>{session.sessionName}</h1>
-<<<<<<< HEAD
-                <p className="subtitle">{new Date(session.createdAt).toLocaleString()}</p>
-=======
                 <p className="subtitle">{session.subjectCode} - {session.subjectName}</p>
->>>>>>> harsh_sharma
 
                 <div className="info-grid" style={{ marginTop: '20px' }}>
                     <div className="info-item">
@@ -396,8 +349,6 @@ function SessionDetails({ setAdminToken }) {
                         <div className="info-value">{session.status}</div>
                     </div>
                     <div className="info-item">
-<<<<<<< HEAD
-=======
                         <div className="info-label">Start Time</div>
                         <div className="info-value">{new Date(session.startTime).toLocaleString()}</div>
                     </div>
@@ -410,7 +361,6 @@ function SessionDetails({ setAdminToken }) {
                         <div className="info-value">{session.captureCount || 0}</div>
                     </div>
                     <div className="info-item">
->>>>>>> harsh_sharma
                         <div className="info-label">Total Photos</div>
                         <div className="info-value">{session.totalPhotos}</div>
                     </div>
@@ -420,11 +370,6 @@ function SessionDetails({ setAdminToken }) {
                     </div>
                 </div>
 
-<<<<<<< HEAD
-                {session.recognizedStudents && session.recognizedStudents.length > 0 && (
-                    <div style={{ marginTop: '30px' }}>
-                        <h3>Recognized Students</h3>
-=======
                 {isActive && (
                     <div style={{ marginTop: '20px', background: '#d4edda', padding: '20px', borderRadius: '10px', border: '2px solid #28a745' }}>
                         <h3 style={{ margin: '0 0 15px 0', color: '#155724' }}>🟢 Session Active</h3>
@@ -666,7 +611,6 @@ function SessionDetails({ setAdminToken }) {
                 {session.recognizedStudents && session.recognizedStudents.length > 0 && (
                     <div style={{ marginTop: '30px' }}>
                         <h3>Recognized Students ({session.studentsRecognized})</h3>
->>>>>>> harsh_sharma
                         <div style={{ marginTop: '15px' }}>
                             {session.recognizedStudents.map((student, idx) => (
                                 <div
@@ -717,11 +661,7 @@ function SessionDetails({ setAdminToken }) {
 
                 {session.photos && session.photos.length > 0 && (
                     <div style={{ marginTop: '30px' }}>
-<<<<<<< HEAD
-                        <h3>Captured Photos</h3>
-=======
                         <h3>Captured Photos ({session.totalPhotos})</h3>
->>>>>>> harsh_sharma
                         <div style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
@@ -749,11 +689,7 @@ function SessionDetails({ setAdminToken }) {
                     </div>
                 )}
             </div>
-<<<<<<< HEAD
-        </div>
-=======
         </AdminLayout>
->>>>>>> harsh_sharma
     );
 }
 

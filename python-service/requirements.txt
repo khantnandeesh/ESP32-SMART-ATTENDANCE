@@ -7,8 +7,4 @@ requests==2.31.0
 python-dotenv==1.0.0
 pymongo==4.6.0
 tf-keras==2.15.0
-<<<<<<< HEAD
 tensorflow==2.15.0
-=======
-tensorflow==2.15.0
->>>>>>> harsh_sharma

@@ -2,11 +2,7 @@
 
 A facial recognition-based attendance system with student authentication and photo capture.
 
-<<<<<<< HEAD
-```https://p.ip.fi/wZoo``` ->refer for sample .env
-=======
 ```https://p.ip.fi/E_Ij``` ->refer for sample .env
->>>>>>> harsh_sharma
 ## Setup Instructions
 
 ### Backend Setup

@@ -2,16 +2,6 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const Student = require('../models/Student');
-<<<<<<< HEAD
-
-const router = express.Router();
-
-// Sign In (Register)
-router.post('/signin', [
-    body('name').trim().notEmpty().withMessage('Name is required'),
-    body('email').isEmail().withMessage('Valid college email is required'),
-    body('registrationNumber').matches(/^\d{8}$/).withMessage('Registration number must be 8 digits'),
-=======
 const { generateOTP, sendOTPEmail, validateMNNITEmail } = require('../config/emailOTP');
 
 const router = express.Router();
@@ -23,7 +13,6 @@ const otpStore = new Map(); // { email: { otp, expiresAt, userData } }
 router.post('/request-otp', [
     body('name').trim().notEmpty().withMessage('Name is required'),
     body('email').isEmail().withMessage('Valid email is required'),
->>>>>>> harsh_sharma
     body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
 ], async (req, res) => {
     try {
@@ -32,9 +21,6 @@ router.post('/request-otp', [
             return res.status(400).json({ errors: errors.array() });
         }
 
-<<<<<<< HEAD
-        const { name, email, registrationNumber, password } = req.body;
-=======
         const { name, email, password } = req.body;
 
         // Validate MNNIT email format
@@ -44,7 +30,6 @@ router.post('/request-otp', [
         }
 
         const registrationNumber = emailValidation.registrationNumber;
->>>>>>> harsh_sharma
 
         // Check if student already exists
         const existingStudent = await Student.findOne({
@@ -52,18 +37,6 @@ router.post('/request-otp', [
         });
 
         if (existingStudent) {
-<<<<<<< HEAD
-            return res.status(400).json({ error: 'Student already exists with this email or registration number' });
-        }
-
-        const student = new Student({ name, email, registrationNumber, password });
-        await student.save();
-
-        const token = jwt.sign({ studentId: student._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-
-        res.status(201).json({
-            message: 'Sign in successful',
-=======
             return res.status(400).json({ 
                 error: 'Student already exists with this email or registration number' 
             });
@@ -156,7 +129,6 @@ router.post('/verify-otp', [
 
         res.status(201).json({
             message: 'Registration successful',
->>>>>>> harsh_sharma
             token,
             student: {
                 id: student._id,
@@ -166,14 +138,6 @@ router.post('/verify-otp', [
                 hasPhotos: student.hasPhotos
             }
         });
-<<<<<<< HEAD
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Login
-=======
 
     } catch (error) {
         console.error('OTP verification error:', error);
@@ -224,7 +188,6 @@ router.post('/resend-otp', [
 });
 
 // Login (unchanged)
->>>>>>> harsh_sharma
 router.post('/login', [
     body('registrationNumber').matches(/^\d{8}$/).withMessage('Registration number must be 8 digits'),
     body('password').notEmpty().withMessage('Password is required')
@@ -265,9 +228,6 @@ router.post('/login', [
     }
 });
 
-<<<<<<< HEAD
-module.exports = router;
-=======
 // Cleanup expired OTPs (run periodically)
 setInterval(() => {
     const now = Date.now();
@@ -279,4 +239,3 @@ setInterval(() => {
 }, 5 * 60 * 1000); // Clean up every 5 minutes
 
 module.exports = router;
->>>>>>> harsh_sharma
